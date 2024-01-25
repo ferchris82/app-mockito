@@ -30,10 +30,9 @@ class ExamenServiceImplTest {
 
     @Test
     void findExamenPorNombre() {
-        List<Examen> datos = Arrays.asList(new Examen(5L, "Matemáticas"), new Examen(6L, "Lenguaje"),
-                new Examen(7L, "Historia"));
 
-        when(repository.findAll()).thenReturn(datos);
+
+        when(repository.findAll()).thenReturn(Datos.EXAMENES);
         Optional<Examen> examen = service .findExamenPorNombre("Matemáticas");
 
         assertTrue(examen.isPresent());
@@ -47,8 +46,17 @@ class ExamenServiceImplTest {
 
         when(repository.findAll()).thenReturn(datos);
         Optional<Examen> examen = service .findExamenPorNombre("Matemáticas");
-
-
+        
         assertFalse(examen.isPresent());
     }
+
+    @Test
+    void testPreguntaExamen() {
+        when(repository.findAll()).thenReturn(Datos.EXAMENES);
+        when(preguntaRepository.findPreguntasPorExamenId(7L)).thenReturn(Datos.PREGUNTAS);
+        Examen examen = service.findExamenPorNombreConPreguntas("Historia");
+        assertEquals(5, examen.getPreguntas().size());
+        assertTrue(examen.getPreguntas().contains("integrales"));
+    }
+
 }
