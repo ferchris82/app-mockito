@@ -14,10 +14,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import static org.mockito.Mockito.*;
 
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -91,5 +88,20 @@ class ExamenServiceImplTest {
         assertNull(examen);
         verify(repository).findAll();
         verify(preguntaRepository).findPreguntasPorExamenId(5L);
+    }
+
+    @Test
+    void testGuardarExamen() {
+        Examen newExamen = Datos.EXAMEN;
+        newExamen.setPreguntas(Datos.PREGUNTAS);
+
+        when(repository.guardar(any(Examen.class))).thenReturn(Datos.EXAMEN);
+        Examen examen = service.guardar(newExamen);
+        assertNotNull(examen.getId());
+        assertEquals(8L, examen.getId());
+        assertEquals("Física", examen.getNombre());
+
+        verify(repository).guardar(any(Examen.class));
+        verify(preguntaRepository).guardarVarias(anyList());
     }
 }
